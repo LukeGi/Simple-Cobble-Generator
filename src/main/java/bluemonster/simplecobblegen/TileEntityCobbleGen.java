@@ -85,6 +85,11 @@ public class TileEntityCobbleGen extends TileEntity implements IItemHandler {
         return new ItemStack(Blocks.COBBLESTONE, amt);
     }
 
+    @Override
+    public int getSlotLimit(int slot) {
+        return Integer.MAX_VALUE;
+    }
+
     public int getMaxCobble() {
         return storage != null ? storage.getEnergyStored() / SimpleCobbleGen.Configs.RF_PER_BLOCK : Integer.MAX_VALUE;
     }
