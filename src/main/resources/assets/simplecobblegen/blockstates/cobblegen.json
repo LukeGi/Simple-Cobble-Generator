@@ -1,17 +1,5 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "cube_all",
-    "textures": {
-      "all": "simplecobblegen:block/cobblegen"
+    "variants": {
+        "normal": { "model": "simplecobblegen:cobblegen" }
     }
-  },
-  "variants": {
-    "inventory": [
-      {}
-    ],
-    "normal": [
-      {}
-    ]
-  }
 }

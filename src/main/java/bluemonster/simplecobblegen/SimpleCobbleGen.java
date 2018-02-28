@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 @Mod(modid = SimpleCobbleGen.MODID, name = "Simple Cobblestone Generator", version = "X.F.0")
 @Mod.EventBusSubscriber
 public class SimpleCobbleGen {
-    public static Block cobblegen;
+    public static CobbleGenBlock cobblegen;
     public static Item cobblegen_item;
     public static final String MODID = "simplecobblegen";
     private static final ResourceLocation RS = new ResourceLocation(MODID, "cobblegen");
@@ -53,13 +53,8 @@ public class SimpleCobbleGen {
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        event.getRegistry().register(cobblegen = new BlockContainer(Material.ROCK) {
-            @Nullable
-            @Override
-            public TileEntity createNewTileEntity(World worldIn, int meta) {
-                return new TileEntityCobbleGen();
-            }
-        }.setHardness(4).setResistance(4).setRegistryName(RS).setUnlocalizedName(RS.toString()));
+        cobblegen = new CobbleGenBlock();
+        event.getRegistry().register(cobblegen);
         GameRegistry.registerTileEntity(TileEntityCobbleGen.class, RS.toString());
     }
 
