@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ppp",
+    "lcw",
+    "ppp"
+  ],
+  "key": {
+    "p": {
+      "item": "minecraft:iron_pickaxe"
+    },
+    "c": {
+      "item": "minecraft:cobblestone"
+    },
+    "l": {
+      "item": "minecraft:lava_bucket"
+    },
+    "w": {
+      "item": "minecraft:water_bucket"
+    }
+  },
+  "result": {
+    "item": "simplecobblegen:cobblegen"
+  }
+}

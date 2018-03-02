@@ -1,0 +1,9 @@
+[
+  {
+    "modid": "simplecobblegen",
+    "name": "Simple Cobblestone Genertor",
+    "description": "Mod that adds a Cobblestone Generator block.",
+    "mcversion": "1.12.2",
+    "authors": ["bluemonster122"]
+  }
+]
