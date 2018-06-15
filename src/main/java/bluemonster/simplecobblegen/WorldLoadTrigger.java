@@ -7,38 +7,35 @@ import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.util.ResourceLocation;
 
-public class WorldLoadTrigger implements ICriterionTrigger{
+public class WorldLoadTrigger implements ICriterionTrigger {
 
-    private static final ResourceLocation RESOURCE_LOCATION = new ResourceLocation(SimpleCobbleGen.MODID, "world_load");
+  private static final ResourceLocation RESOURCE_LOCATION = new ResourceLocation(SimpleCobbleGen.MODID, "world_load");
 
-    @Override
-    public ResourceLocation getId() {
-        return null;
-    }
+  @Override
+  public ResourceLocation getId() {
+    return null;
+  }
 
-    @Override
-    public void addListener(PlayerAdvancements playerAdvancementsIn, Listener listener) {
+  @Override
+  public void addListener(PlayerAdvancements playerAdvancementsIn, Listener listener) {
 
-    }
+  }
 
-    @Override
-    public void removeListener(PlayerAdvancements playerAdvancementsIn, Listener listener) {
+  @Override
+  public void removeListener(PlayerAdvancements playerAdvancementsIn, Listener listener) {
 
-    }
+  }
 
-    @Override
-    public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
+  @Override
+  public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
 
-    }
+  }
 
-    /**
-     * Deserialize a ICriterionInstance of this trigger from the data in the JSON.
-     *
-     * @param json
-     * @param context
-     */
-    @Override
-    public ICriterionInstance deserializeInstance(JsonObject json, JsonDeserializationContext context) {
-        return null;
-    }
+  /**
+   * Deserialize a ICriterionInstance of this trigger from the data in the JSON.
+   */
+  @Override
+  public ICriterionInstance deserializeInstance(JsonObject json, JsonDeserializationContext context) {
+    return null;
+  }
 }
