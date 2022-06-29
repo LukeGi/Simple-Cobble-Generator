@@ -38,6 +38,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import org.lwjgl.system.CallbackI.B;
 
 @EventBusSubscriber(modid = SGC.ID, bus = Bus.MOD)
 public class DataGen {
@@ -55,12 +56,13 @@ public class DataGen {
     if (event.includeServer()) {
       gen.addProvider(new Recipes(gen));
       gen.addProvider(new AllLoots(gen));
+      gen.addProvider(new BTags(gen, xfh));
     }
   }
 
   public static class BTags extends BlockTagsProvider {
-    public BTags(DataGenerator p_126511_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
-      super(p_126511_, modId, existingFileHelper);
+    public BTags(DataGenerator p_126511_, @Nullable ExistingFileHelper existingFileHelper) {
+      super(p_126511_, SGC.ID, existingFileHelper);
     }
 
     @Override
