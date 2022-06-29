@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "simplecobblegen:block/cobble_generator"
+  }
+}
