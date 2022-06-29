@@ -13,9 +13,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public class CobbleGenEntity extends BlockEntity implements IItemHandler {
 
   EnergyStorage energy = null;
@@ -55,15 +52,15 @@ public class CobbleGenEntity extends BlockEntity implements IItemHandler {
   }
 
   @Override
-  protected void saveAdditional(CompoundTag tag) {
-    super.saveAdditional(tag);
+  public CompoundTag save(CompoundTag tag) {
     if (energy != null) {
       tag.put("energy", energy.serializeNBT());
     }
+    return super.save(tag);
   }
 
   @Override
-  public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+  public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
     if (CapabilityEnergy.ENERGY.equals(cap)) {
       return energyHolder.cast();
     } else if (CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.equals(cap)) {
@@ -79,7 +76,7 @@ public class CobbleGenEntity extends BlockEntity implements IItemHandler {
   }
 
   @Override
-  public @NotNull ItemStack getStackInSlot(int slot) {
+  public ItemStack getStackInSlot(int slot) {
     return new ItemStack(Blocks.COBBLESTONE, getMaxCobble());
   }
 
@@ -89,12 +86,12 @@ public class CobbleGenEntity extends BlockEntity implements IItemHandler {
   }
 
   @Override
-  public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+  public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
     return stack;
   }
 
   @Override
-  public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+  public ItemStack extractItem(int slot, int amount, boolean simulate) {
     int amt = Math.min(getMaxCobble(), amount);
     if (energy != null) {
       energy.extractEnergy(amt * Config.COBBLE_GEN.rf_per_block(), simulate);
@@ -108,7 +105,7 @@ public class CobbleGenEntity extends BlockEntity implements IItemHandler {
   }
 
   @Override
-  public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+  public boolean isItemValid(int slot, ItemStack stack) {
     return stack.is(Blocks.COBBLESTONE.asItem());
   }
 }
