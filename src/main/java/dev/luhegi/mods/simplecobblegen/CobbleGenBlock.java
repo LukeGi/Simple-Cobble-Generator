@@ -12,8 +12,7 @@ public class CobbleGenBlock extends BaseEntityBlock {
 
   public CobbleGenBlock() {
     super(Properties.copy(Blocks.COBBLESTONE)
-        .strength(15f)
-        .destroyTime(5f));
+        .strength(2f, 15f));
   }
 
   @Override

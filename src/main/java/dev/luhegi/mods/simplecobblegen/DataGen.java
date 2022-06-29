@@ -16,7 +16,9 @@ import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -34,6 +36,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(modid = SGC.ID, bus = Bus.MOD)
 public class DataGen {
@@ -49,6 +52,20 @@ public class DataGen {
 
     gen.addProvider(event.includeServer(), new Recipes(gen));
     gen.addProvider(event.includeServer(), new AllLoots(gen));
+    gen.addProvider(event.includeServer(), new BTags(gen, xfh));
+  }
+
+  public static class BTags extends BlockTagsProvider {
+
+    public BTags(DataGenerator p_126511_, @Nullable ExistingFileHelper existingFileHelper) {
+      super(p_126511_, SGC.ID, existingFileHelper);
+    }
+
+    @Override
+    protected void addTags() {
+      tag(BlockTags.MINEABLE_WITH_PICKAXE)
+          .add(SGC.COBBLE_GENERATOR_BLOCK.get());
+    }
   }
 
   public static class AllLoots extends LootTableProvider {
