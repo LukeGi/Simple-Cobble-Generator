@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.BlockLoot;
@@ -16,7 +18,9 @@ import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -32,8 +36,8 @@ import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
-import net.minecraftforge.registries.RegistryObject;
 
 @EventBusSubscriber(modid = SGC.ID, bus = Bus.MOD)
 public class DataGen {
@@ -43,14 +47,33 @@ public class DataGen {
     DataGenerator gen = event.getGenerator();
     ExistingFileHelper xfh = event.getExistingFileHelper();
 
-    gen.addProvider(event.includeClient(), new States(gen, xfh));
-    gen.addProvider(event.includeClient(), new ItemModels(gen, xfh));
-    gen.addProvider(event.includeClient(), new Lang(gen));
-
-    gen.addProvider(event.includeServer(), new Recipes(gen));
-    gen.addProvider(event.includeServer(), new AllLoots(gen));
+    if (event.includeClient()) {
+      gen.addProvider(new States(gen, xfh));
+      gen.addProvider(new ItemModels(gen, xfh));
+      gen.addProvider(new Lang(gen));
+    }
+    if (event.includeServer()) {
+      gen.addProvider(new Recipes(gen));
+      gen.addProvider(new AllLoots(gen));
+    }
   }
 
+  public static class BTags extends BlockTagsProvider {
+    public BTags(DataGenerator p_126511_, String modId, @Nullable ExistingFileHelper existingFileHelper) {
+      super(p_126511_, modId, existingFileHelper);
+    }
+
+    @Override
+    protected void addTags() {
+      tag(BlockTags.MINEABLE_WITH_PICKAXE)
+          .add(SGC.COBBLE_GENERATOR_BLOCK.get());
+    }
+
+    @Override
+    public String getName() {
+      return "SGC Block Tags";
+    }
+  }
   public static class AllLoots extends LootTableProvider {
 
     public AllLoots(DataGenerator p_124437_) {
@@ -65,6 +88,11 @@ public class DataGen {
     @Override
     protected void validate(Map<ResourceLocation, LootTable> map, final ValidationContext validationtracker) {
       map.forEach((id, table) -> LootTables.validate(validationtracker, id, table));
+    }
+
+    @Override
+    public String getName() {
+      return "SGC Loots";
     }
   }
 
@@ -93,6 +121,12 @@ public class DataGen {
     protected void registerModels() {
       withExistingParent("cobble_generator", modLoc("block/cobble_generator"));
     }
+
+    @Nonnull
+    @Override
+    public String getName() {
+      return "SGC Item Models";
+    }
   }
 
   public static class States extends BlockStateProvider {
@@ -104,6 +138,12 @@ public class DataGen {
     @Override
     protected void registerStatesAndModels() {
       simpleBlock(SGC.COBBLE_GENERATOR_BLOCK.get());
+    }
+
+    @Nonnull
+    @Override
+    public String getName() {
+      return "SGC Block States and Models";
     }
   }
 
@@ -118,6 +158,11 @@ public class DataGen {
       addBlock(SGC.COBBLE_GENERATOR_BLOCK, "Cobblestone Genreator");
       add(String.format("config.%s.%s.rfperblock", SGC.ID, CobbleGenConfig.NAME), "The RF required to generate a single cobble block.");
       add(String.format("config.%s.%s.maxcobblepertick", SGC.ID, CobbleGenConfig.NAME), "The maximum number of cobble blocks that can be generated per tick.");
+    }
+
+    @Override
+    public String getName() {
+      return "SGC Language EN_US";
     }
   }
 
@@ -139,6 +184,11 @@ public class DataGen {
           .define('W', Items.WATER_BUCKET)
           .unlockedBy("has_cobble_generator", InventoryChangeTrigger.TriggerInstance.hasItems(Items.COBBLESTONE))
           .save(consumer);
+    }
+
+    @Override
+    public String getName() {
+      return "SGC Recipes";
     }
   }
 }
