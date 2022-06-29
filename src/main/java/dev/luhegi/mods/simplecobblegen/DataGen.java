@@ -43,12 +43,15 @@ public class DataGen {
     DataGenerator gen = event.getGenerator();
     ExistingFileHelper xfh = event.getExistingFileHelper();
 
-    gen.addProvider(event.includeClient(), new States(gen, xfh));
-    gen.addProvider(event.includeClient(), new ItemModels(gen, xfh));
-    gen.addProvider(event.includeClient(), new Lang(gen));
-
-    gen.addProvider(event.includeServer(), new Recipes(gen));
-    gen.addProvider(event.includeServer(), new AllLoots(gen));
+    if (event.includeClient()) {
+      gen.addProvider(new States(gen, xfh));
+      gen.addProvider(new ItemModels(gen, xfh));
+      gen.addProvider(new Lang(gen));
+    }
+    if (event.includeServer()) {
+      gen.addProvider(new Recipes(gen));
+      gen.addProvider(new AllLoots(gen));
+    }
   }
 
   public static class AllLoots extends LootTableProvider {
