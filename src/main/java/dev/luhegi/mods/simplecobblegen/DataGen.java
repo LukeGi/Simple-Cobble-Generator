@@ -36,9 +36,8 @@ import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
-import org.lwjgl.system.CallbackI.B;
+import net.minecraftforge.registries.RegistryObject;
 
 @EventBusSubscriber(modid = SGC.ID, bus = Bus.MOD)
 public class DataGen {
