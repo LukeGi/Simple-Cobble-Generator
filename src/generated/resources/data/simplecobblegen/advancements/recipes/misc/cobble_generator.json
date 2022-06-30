@@ -1,23 +1,26 @@
 {
   "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "simplecobblegen:cobble_generator"
+    ]
+  },
   "criteria": {
     "has_cobble_generator": {
+      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:cobblestone"
-            ]
+            "item": "minecraft:cobblestone"
           }
         ]
-      },
-      "trigger": "minecraft:inventory_changed"
+      }
     },
     "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "simplecobblegen:cobble_generator"
-      },
-      "trigger": "minecraft:recipe_unlocked"
+      }
     }
   },
   "requirements": [
@@ -25,10 +28,5 @@
       "has_cobble_generator",
       "has_the_recipe"
     ]
-  ],
-  "rewards": {
-    "recipes": [
-      "simplecobblegen:cobble_generator"
-    ]
-  }
+  ]
 }

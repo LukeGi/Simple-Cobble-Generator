@@ -9,34 +9,33 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import java.util.stream.Collectors;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.block.Block;
+import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.loot.BlockLoot;
-import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.tags.BlockTagsProvider;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTable.Builder;
-import net.minecraft.world.level.storage.loot.LootTables;
-import net.minecraft.world.level.storage.loot.ValidationContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.data.IFinishedRecipe;
+import net.minecraft.data.LootTableProvider;
+import net.minecraft.data.RecipeProvider;
+import net.minecraft.data.ShapedRecipeBuilder;
+import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.item.Items;
+import net.minecraft.loot.LootParameterSet;
+import net.minecraft.loot.LootParameterSets;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.LootTable.Builder;
+import net.minecraft.loot.LootTableManager;
+import net.minecraft.loot.ValidationTracker;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
-import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 
 @EventBusSubscriber(modid = SGC.ID, bus = Bus.MOD)
 public class DataGen {
@@ -46,25 +45,26 @@ public class DataGen {
     DataGenerator gen = event.getGenerator();
     ExistingFileHelper xfh = event.getExistingFileHelper();
 
-    gen.addProvider(event.includeClient(), new States(gen, xfh));
-    gen.addProvider(event.includeClient(), new ItemModels(gen, xfh));
-    gen.addProvider(event.includeClient(), new Lang(gen));
-
-    gen.addProvider(event.includeServer(), new Recipes(gen));
-    gen.addProvider(event.includeServer(), new AllLoots(gen));
-    gen.addProvider(event.includeServer(), new BTags(gen, xfh));
+    if (event.includeClient()) {
+      gen.addProvider(new States(gen, xfh));
+      gen.addProvider(new ItemModels(gen, xfh));
+      gen.addProvider(new Lang(gen));
+    }
+    if (event.includeServer()) {
+      gen.addProvider(new Recipes(gen));
+      gen.addProvider(new AllLoots(gen));
+      gen.addProvider(new BTags(gen, xfh));
+    }
   }
 
   public static class BTags extends BlockTagsProvider {
 
-    public BTags(DataGenerator p_126511_, @Nullable ExistingFileHelper existingFileHelper) {
+    public BTags(DataGenerator p_126511_, ExistingFileHelper existingFileHelper) {
       super(p_126511_, SGC.ID, existingFileHelper);
     }
 
     @Override
     protected void addTags() {
-      tag(BlockTags.MINEABLE_WITH_PICKAXE)
-          .add(SGC.COBBLE_GENERATOR_BLOCK.get());
     }
   }
 
@@ -74,18 +74,19 @@ public class DataGen {
       super(p_124437_);
     }
 
+
     @Override
-    protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, Builder>>>, LootContextParamSet>> getTables() {
-      return ImmutableList.of(Pair.of(BlockLoots::new, LootContextParamSets.BLOCK));
+    protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, Builder>>>, LootParameterSet>> getTables() {
+      return ImmutableList.of(Pair.of(BlockLoots::new, LootParameterSets.BLOCK));
     }
 
     @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, final ValidationContext validationtracker) {
-      map.forEach((id, table) -> LootTables.validate(validationtracker, id, table));
+    protected void validate(Map<ResourceLocation, LootTable> map, ValidationTracker validationtracker) {
+      map.forEach((name, table) -> LootTableManager.validate(validationtracker, name, table));
     }
   }
 
-  public static class BlockLoots extends BlockLoot {
+  public static class BlockLoots extends BlockLootTables {
 
     @Override
     protected void addTables() {
@@ -96,7 +97,7 @@ public class DataGen {
     protected Iterable<Block> getKnownBlocks() {
       return ImmutableSet.<RegistryObject<Block>>builder()
           .add(SGC.COBBLE_GENERATOR_BLOCK)
-          .build().stream().map(RegistryObject::get).toList();
+          .build().stream().map(RegistryObject::get).collect(Collectors.toList());
     }
   }
 
@@ -145,7 +146,7 @@ public class DataGen {
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
       ShapedRecipeBuilder.shaped(SGC.COBBLE_GENERATOR_ITEM.get())
           .pattern("PPP")
           .pattern("LCW")
@@ -154,7 +155,7 @@ public class DataGen {
           .define('C', Items.COBBLESTONE)
           .define('L', Items.LAVA_BUCKET)
           .define('W', Items.WATER_BUCKET)
-          .unlockedBy("has_cobble_generator", InventoryChangeTrigger.TriggerInstance.hasItems(Items.COBBLESTONE))
+          .unlockedBy("has_cobble_generator", InventoryChangeTrigger.Instance.hasItems(Items.COBBLESTONE))
           .save(consumer);
     }
   }

@@ -1,28 +1,27 @@
 package dev.luhegi.mods.simplecobblegen;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockReader;
 
-public class CobbleGenBlock extends BaseEntityBlock {
+public class CobbleGenBlock extends ContainerBlock {
 
   public CobbleGenBlock() {
     super(Properties.copy(Blocks.COBBLESTONE)
         .strength(2f, 15f));
   }
 
-  @Override
-  public RenderShape getRenderShape(BlockState p_49232_) {
-    return RenderShape.MODEL;
+  public BlockRenderType getRenderShape(BlockState p_149645_1_) {
+    return BlockRenderType.MODEL;
   }
 
   @Nullable
   @Override
-  public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-    return new CobbleGenEntity(p_153215_, p_153216_);
+  public TileEntity newBlockEntity(IBlockReader p_196283_1_) {
+    return new CobbleGenEntity();
   }
 }
