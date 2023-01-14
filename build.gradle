@@ -1,11 +1,10 @@
-
 plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
 
 group = 'dev.luhegi.mods'
-version = '1.0.1'
+version = '1.0.2'
 
 java {
     archivesBaseName = 'simplecobblegen'
@@ -49,7 +48,7 @@ minecraft {
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
 
-                        // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', 'simplecobblegen'
 
             mods {
@@ -66,7 +65,7 @@ minecraft {
 
             property 'forge.logging.console.level', 'debug'
 
-                        property 'forge.enabledGameTestNamespaces', 'simplecobblegen'
+            property 'forge.enabledGameTestNamespaces', 'simplecobblegen'
 
             mods {
                 simplecobblegen {
@@ -101,6 +100,7 @@ minecraft {
 
             property 'forge.logging.console.level', 'debug'
 
+            property 'forge.enabledGameTestNamespaces', 'simplecobblegen'
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
             args '--mod', 'simplecobblegen', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
@@ -149,13 +149,13 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title": "simplecobblegen",
-                            "Specification-Vendor": "luhegi",
-                            "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": project.name,
-                "Implementation-Version": project.jar.archiveVersion,
-                            "Implementation-Vendor": "luhegi",
-                            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Specification-Title"     : "simplecobblegen",
+                "Specification-Vendor"    : "luhegi",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "luhegi",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
