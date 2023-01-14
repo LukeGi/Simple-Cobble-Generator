@@ -13,7 +13,7 @@ apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 group = 'dev.luhegi.mods'
-version = '1.0.1'
+version = '1.0.2'
 archivesBaseName = 'simplecobblegen'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
